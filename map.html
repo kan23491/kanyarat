@@ -1,0 +1,177 @@
+	<meta charset="utf-8">
+	<select id="selPlace">
+		<option>กรุณาเลือกปลายทาง</option>
+		<script>
+			$.post('selectPlace.php',{},function(data){
+			var jPlace = JSON.parse(data);
+			for (i = 0; i < jPlace.length; i++) {  
+				$('#selPlace').append('<option value="'+i+'">'+jPlace[i].name+'</option>');
+				}
+
+			});
+
+		</script>
+		
+
+	</select> 
+	<b id="direct"> ระยะห่าง: </b>
+	<div id="map">
+
+	</div>
+	<style>
+		#map{
+			width: 100%;
+			height: 90%;
+		}
+
+		#map iframe{
+			width: 100%;
+			height: 90%
+		}
+		#direct{
+			 width:auto;
+			 padding: 12px 20px;
+			 margin: 10px ;
+			 display: inline-block;
+			 border: 1px solid #ccc;
+			 border-radius: 4px;
+			 box-sizing: border-box;
+		}
+
+		@media only screen and (max-width:1200px) and (max-width: 768px) {
+				#map{
+					width: 100%;
+					height: 90%;
+				}
+				#direct{
+					 width:auto;
+					 padding: 12px 20px;
+					 margin: 10px ;
+					 display: inline-block;
+					 border: 1px solid #ccc;
+					 border-radius: 4px;
+					 box-sizing: border-box;
+			}
+		}
+	
+		
+	</style>
+	<script  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjm5miI0bV1CT1w1XpMEA1Jv5MMn8d8H8">
+    </script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<!-- <script type="text/javascript" src="jquery.min.js"></script> -->
+    <script>
+    	var map;
+    	var bounds  = new google.maps.LatLngBounds();
+    	var infowindow = new google.maps.InfoWindow();
+    	var marker, i;
+    	var markers = [];
+    	var myLocation;
+    	
+			
+    	function initMap(latitude,longitude) {
+    		map = new google.maps.Map(document.getElementById('map'), {zoom: 12, center: {lat: 18.4181701, lng: 98.6773163}}); //สร้างแผนที่
+    		var directionsService = new google.maps.DirectionsService();
+    		var directionsDisplay = new google.maps.DirectionsRenderer({
+  				map: map,
+  				suppressMarkers: true
+  				
+  			});
+    		myLocation = new google.maps.LatLng(18.4181701, 98.6773163); 
+
+    		// Create My location
+    		marker = new google.maps.Marker({
+				position: new google.maps.LatLng(18.4181701, 98.6773163),//ตำแหน่ง สภ.จอมทอง
+				icon:"./scr/PoliceBadge.png",
+				map: map
+			});
+			
+			google.maps.event.addListener(marker, 'click', (function(marker, i) { 
+				return function() {
+			    	infowindow.setContent("Your Location");
+			    	infowindow.open(map, marker);
+			    	infoWindow.open(map); 
+			    }
+			})(marker, i));
+
+			
+			loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+			bounds.extend(loc);
+    		// Create Marker Place 
+    		createMarker();
+    		map.fitBounds(bounds);
+
+    		var onChangeHandler = function() {
+          	calculateAndDisplayRoute(directionsDisplay, directionsService);
+	  		}
+	        document.getElementById('selPlace').addEventListener('change', onChangeHandler);
+        }
+       
+        function getLocation() {
+			if (navigator.geolocation) {
+		    	navigator.geolocation.getCurrentPosition(showPosition);
+		  	} else {
+		    	x.innerHTML = "Geolocation is not supported by this browser.";
+		    	// x.innerHTML = "latitude:" + position.coords.latitude + "longtitude:" + position.coords.longitude;
+		  	}
+		}
+
+		function showPosition(position) {
+		  	initMap(position.coords.latitude,position.coords.longitude);
+		  	// x.innerHTML="Latitude: " + position.coords.latitude +   "<br>Longitude: " + position.coords.longitude;      
+
+
+		}
+
+		function createMarker(){
+			$.post('selectPlace.php',{},function(data){
+				var jPlace = JSON.parse(data);
+				for (i = 0; i < jPlace.length; i++) {  
+			      	marker = new google.maps.Marker({
+				        position: new google.maps.LatLng(jPlace[i].latitude, jPlace[i].longtitude),
+				        map: map
+			      	});
+			      	// $('#selPlace').append('<option value="'+i+'">'+jPlace[i].name+'</option>');
+			     	google.maps.event.addListener(marker, 'click', (function(marker, i) {
+			        return function() {
+			          infowindow.setContent(jPlace[i].name);
+			          infowindow.open(map, marker);
+			        	}
+			      	})(marker, i));
+			     	loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+					bounds.extend(loc);
+					markers.push({lat:marker.position.lat(), lng:marker.position.lng()});
+			    }
+			    map.fitBounds(bounds);
+			});
+			
+		}
+
+		function calculateAndDisplayRoute(directionsDisplay, directionsService){
+			var target = new google.maps.LatLng(markers[$('#selPlace').val()].lat, markers[$('#selPlace').val()].lng);
+			directionsService.route({
+	    		origin: myLocation,//จุดเริ่มต้น
+	    		destination: target,//ปลายทาง
+	   			travelMode: 'DRIVING' //สำรวจเส้นทางสายหลัก
+	        }, function(response, status) {
+	          if (status === 'OK') {
+	            directionsDisplay.setDirections(response); //แสดงเส้นทาง
+	            var route = response.routes[0];
+	            var summary = document.getElementById('direct');
+	            summary.innerHTML = '';
+
+	            for (var j = 0; j< route.legs.length;j++){
+	            summary.innerHTML += '<b>ระยะห่าง: </b>' + route.legs[j].distance.text + '<br>';
+	            }
+	            
+	          } else {
+	            window.alert('Directions request failed due to ' + status);
+	          }
+	        });
+		}
+		getLocation();
+		 google.maps.event.addDomListener(window, 'load', initMap);	 
+    </script>
+ 
+

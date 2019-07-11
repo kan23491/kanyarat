@@ -1,0 +1,141 @@
+#top{
+    background-image: url(scr/chomtong.jpg); 
+				 background-size: contain;
+				 position: relative;
+				 background-size:100% 100%;}
+
+	
+/*#log { 
+  font-size: 50px;
+	  /*padding: 30px;
+		}*/*/
+input[type=text],[type=password],[type=number] {
+  width: 300px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: auto;
+  background-color: #DCDCDC;
+  color: black;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left:20px;  
+}
+
+#manu{
+	font-size: 30px;
+	border: 2px solid black;
+	width: 100%;
+
+	}
+
+#photo{
+	border: 2px solid black;
+	width: 300px;
+	height: auto;
+	margin-left: 300px;
+	margin-top: 20px;
+	}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  width: 100%;
+
+}
+
+.menu{display: none;}
+
+li {
+  float: left;
+}
+
+.menuBar{
+  display: none;        
+}
+
+li a {
+  display: block;
+  color: white;
+  /*text-align: center;*/
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/*li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #4CAF50;
+
+}
+
+div.gallery {
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: 300px;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 300px;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+
+.button {
+		background-color: orange;
+	  	border: none;
+	  	color: black;
+	  	padding: 15px 32px;
+	  	text-align: center;
+	  	text-decoration: none;
+	  	display: inline-block;
+	  	font-size: 16px;
+	  	margin: 4px 2px;
+	  	cursor: pointer;
+
+}
+.button1{background-color: red;
+		width: 170px; }
+.button2{margin-left: 15px;}
+.button3{margin-left: 18px;
+		background-color: #66FF66;}*/
+
+/*#der{
+	border: 2px solid black;
+	width: 1000px;
+	height: 500px;
+	float: left;
+	margin-left: 400px;
+	padding: 30px 0px 0px 30px
+	
+}*/
+#center{
+	float: left;
+}
+
+#font{ font-size: 30px;
+		 }
